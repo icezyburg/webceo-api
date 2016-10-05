@@ -1,5 +1,5 @@
 {
-    "name": "rds/yii2-webceo",
+    "name": "icezyburg/yii2-webceo",
 
     "type": "yii2-extension",
 
@@ -24,7 +24,7 @@
 
     "autoload": {
         "psr-4": {
-            "rds\\webceo\\": ""
+            "icezyburg\\webceo\\": ""
         }
     }
 }
