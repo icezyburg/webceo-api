@@ -1,5 +1,5 @@
 <?php
-namespace rds\WebCeo;
+namespace icezyburg\WebCeo;
 
 /**
  * 
