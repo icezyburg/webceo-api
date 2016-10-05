@@ -1,0 +1,34 @@
+{
+    // package name
+    "name": "rds/yii2-webceo",
+
+    // package type
+    "type": "yii2-extension",
+
+    "description": "Make a call to the Web CEO API",
+    "keywords": ["webceo", "api", "rds"],
+    "license": "MIT License",
+    "support": {
+        "issues": "https://github.com/icezyburg/webceo-api/issues",
+        "wiki": "https://github.com/icezyburg/webceo-api/wiki",
+        "source": "https://github.com/icezyburg/webceo-api"
+    },
+    "authors": [
+        {
+            "name": "Pattamakorn Samhadthai",
+            "email": "icezyburg@gmail.com"
+        }
+    ],
+
+    // package dependencies
+    "require": {
+        "yiisoft/yii2": "~2.0.0"
+    },
+
+    // class autoloading specs
+    "autoload": {
+        "psr-4": {
+            "rds\\webceoApi\\": ""
+        }
+    }
+}
