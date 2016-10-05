@@ -1,8 +1,6 @@
 {
-    // package name
     "name": "rds/yii2-webceo",
 
-    // package type
     "type": "yii2-extension",
 
     "description": "Make a call to the Web CEO API",
@@ -20,15 +18,13 @@
         }
     ],
 
-    // package dependencies
     "require": {
         "yiisoft/yii2": "~2.0.0"
     },
 
-    // class autoloading specs
     "autoload": {
         "psr-4": {
-            "rds\\webceoApi\\": ""
+            "rds\\webceo\\": ""
         }
     }
 }
