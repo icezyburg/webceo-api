@@ -15,15 +15,21 @@ class WebCeo
     private $api_url = "https://online.webceo.com/api/";
 
     private $_curl_handle = NULL;
+    private $_debug_info = NULL;
 
     const HTTP_METHOD_POST = 'POST';
 
-    public function get($key = NULL, $endpoint, array $condition = array())
+    public function get($key = NULL, $endpoint, array $condition = array(), array $curl_options = array())
     {
         if (!isset($key) || $key === NULL)
             throw new \InvalidArgumentException('Invalid api key - make sure api_key is defined in the config array');
 
         return $this->_makeRequest($key, $endpoint, $condition);
+    }
+
+    public function getDebugInfo()
+    {
+        return $this->_debug_info;
     }
 
     private function _makeRequest($key, $endpoint, $condition, $method = "POST")
@@ -34,7 +40,7 @@ class WebCeo
 
         $options = array(
             CURLOPT_CUSTOMREQUEST => strtoupper($method),
-            CURLOPT_URL => $api_url,
+            CURLOPT_URL => $this->api_url,
             CURLOPT_POSTFIELDS => "json=".urlencode(json_encode($command)),
             CURLOPT_RETURNTRANSFER => true
         );
@@ -52,13 +58,9 @@ class WebCeo
 
         $this->_debug_info = curl_getinfo($ch);
 
-        if ($response === false) {
-            throw new \RuntimeException('Request Error: ' . curl_error($ch));
-        }
-
         $response = json_decode($response, true);
 
-        if (isset($response['result']) && ($response['result'] < 200 || $response['result'] > 300)) {
+        if (isset($response['result']) && $response['result'] > 0) {
             throw new \RuntimeException('Request Error: ' . $response['errormsg'] . '. Raw Response: ' . print_r($response, true));
         }
 
