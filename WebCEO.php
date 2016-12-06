@@ -15,36 +15,33 @@ class WebCeo
     private $api_url = "https://online.webceo.com/api/";
 
     private $_curl_handle = NULL;
+    private $_debug_info = NULL;
 
     const HTTP_METHOD_POST = 'POST';
 
-    public function get($key = NULL, $endpoint, array $condition = array())
+    public function get(array $query = array())
     {
-        if (!isset($key) || $key === NULL)
+ 
+        if (!isset($query['key']) || $query['key'] === NULL)
             throw new \InvalidArgumentException('Invalid api key - make sure api_key is defined in the config array');
 
-        return $this->_makeRequest($key, $endpoint, $condition);
+        return $this->_makeRequest($query);
     }
 
-    private function _makeRequest($key, $endpoint, $condition, $method = "POST")
+    public function getDebugInfo()
     {
-        $command = array("key" => $key, "method" => $endpoint, "data" => $condition);
+        return $this->_debug_info;
+    }
 
+    private function _makeRequest($query, $method = "POST")
+    {
         $ch = $this->_getCurlHandle();
 
         $options = array(
             CURLOPT_CUSTOMREQUEST => strtoupper($method),
-            CURLOPT_URL => $api_url,
-            CURLOPT_POSTFIELDS => "json=".urlencode(json_encode($command)),
+            CURLOPT_POSTFIELDS => "json=".urlencode(json_encode($query)),
             CURLOPT_RETURNTRANSFER => true
         );
-
-        if (!empty($curl_options)) {
-            $options = array_replace($options, $curl_options);
-        }
-        if (isset($this->_config['curl_options']) && !empty($this->_config['curl_options'])) {
-            $options = array_replace($options, $this->_config['curl_options']);
-        }
 
         curl_setopt_array($ch, $options);
 
@@ -52,13 +49,9 @@ class WebCeo
 
         $this->_debug_info = curl_getinfo($ch);
 
-        if ($response === false) {
-            throw new \RuntimeException('Request Error: ' . curl_error($ch));
-        }
+        $response = json_decode($response);
 
-        $response = json_decode($response, true);
-
-        if (isset($response['result']) && ($response['result'] < 200 || $response['result'] > 300)) {
+        if (isset($response['result']) && $response['result'] > 0) {
             throw new \RuntimeException('Request Error: ' . $response['errormsg'] . '. Raw Response: ' . print_r($response, true));
         }
 
@@ -69,7 +62,7 @@ class WebCeo
     protected function _getCurlHandle()
     {
         if (!$this->_curl_handle) {
-            $this->_curl_handle = curl_init();
+            $this->_curl_handle = curl_init($this->api_url);
         }
         return $this->_curl_handle;
     }
